@@ -41,49 +41,62 @@ ${password_element}         xpath=//*[@id="primary"]/div/main/div/div/div[1]/div
 ${button_continue}          xpath=//*[@id="primary"]/div/main/div/div/form/div[1]/div[2]/button
 ${button_login}             xpath=//*[@id="primary"]/div/main/div/div/form/div[1]/div[2]/button
 
+${button_new_post}          xpath=//*[@id="header"]/div[1]/a
+                                  
+${editor_elements}          xpath=//*[@id="editor"]/div/div/div[1]/div
+${add_title}                xpath=//*[@class="editor-post-title__input"]
+${new_title}                Command Verone
+${button_publish}           xpath=//*[@id="editor"]/div/div/div[1]/div/div[1]/div/div[2]/button[2]
+${button_publish_verif}     xpath=//*[@id="editor"]/div/div/div[1]/div/div[2]/div[3]/div/div/div/div[1]/div/button
+${publish_preverificat}     xpath=//*[@id="editor"]/div/div/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[1]/strong
+${publish_verification}     xpath=//*[@id="editor"]/div/div/div[1]/div/div[2]/div[3]/div/div/div/div[1]/div
+
+${wait}                     13 seconds
+${frame}                    xpath=//*[@id="primary"]/div[2]/iframe         
+
 *** Keywords ***
 Open Browser to Register
-    Open Browser                    ${registration_url}    ${browser}
+    Open Browser                        ${registration_url}    ${browser}
     Maximize Browser Window
     Login Page Should Be Open
 
 Start Registration
     Registration Form Should Be Open First Step
-    Input Text                      ${email}    ${valid_email}
-    Input Text                      ${username} ${valid_username}
-    Input Text                      ${password} ${valid_password}
-    Click Button                    ${button_create}
+    Input Text                          ${email}    ${valid_email}
+    Input Text                          ${username} ${valid_username}
+    Input Text                          ${password} ${valid_password}
+    Click Button                        ${button_create}
     Registration Form Should Be Open Second Step
-    Input Text                      ${domain}   ${domain_name}
-    Wait Until Element Is Visible   ${domain_visible}
-    Click Button                    ${button_select}
+    Input Text                          ${domain}   ${domain_name}
+    Wait Until Element Is Visible       ${domain_visible}
+    Click Button                        ${button_select}
     Registration Form Should Be Open Second Step
-    Click Button                    ${button_freesite}
-    Wait Until Element Is Visible   ${registration_confirm}
+    Click Button                        ${button_freesite}
+    Wait Until Element Is Visible       ${registration_confirm}
     Logout
 
 Logout
-    Click Button                    ${logout_element}
-    Wait Until Element Is Visible   ${logout}
-    Click Button                    ${logout}
+    Click Button                        ${logout_element}
+    Wait Until Element Is Visible       ${logout}
+    Click Button                        ${logout}
 
 Registration Form Should Be Open First Step
-    Page Should Contain Element     ${registration_title}
+    Page Should Contain Element         ${registration_title}
 
 Registration Form Should Be Open Second Step
-    Page Should Contain Element     ${registration_sec_step} 
+    Page Should Contain Element         ${registration_sec_step} 
 
 Registration Form Should Be Open Third Step
-    Page Should Contain Element     ${registration_third_step}
+    Page Should Contain Element         ${registration_third_step}
 
 
 Open Browser To Login 
-    Open Browser                    ${login_url}    ${browser}
+    Open Browser                        ${login_url}    ${browser}
     Maximize Browser Window
     Login Page Should Be Open
 
 Login Page Should Be Open
-    Page Should Contain Element     ${login_element}
+    Page Should Contain Element         ${login_element}
 
 #Go To Login Page
 #    Go To                           ${login_url}
@@ -91,19 +104,32 @@ Login Page Should Be Open
 
 Input Username
     #[Arguments]     ${username}
-    Input Text                      ${login_username}        ${testuser}
-    Click Button                    ${button_continue}
+    Input Text                          ${login_username}        ${testuser}
+    Click Button                        ${button_continue}
 
 Input Password
     #[Arguments]     ${password}
-    Wait Until Element Is Visible   ${password_element}
-    Wait Until Element Is Enabled   ${login_password}   
-    Input Text                      ${login_password}      ${testpassword}
-    Click Button                    ${button_login}
+    Wait Until Element Is Visible       ${password_element}
+    Wait Until Element Is Enabled       ${login_password}   
+    Input Text                          ${login_password}      ${testpassword}
+    Click Button                        ${button_login}
 
 #Submit Credentials
 #    Click Button                    ${button}
 
 Welcome Page Should Be Opened
-    Wait Until Element Is Visible   ${successful_element}
-    Page Should Contain Element     ${successful_element}
+    Wait Until Element Is Visible       ${successful_element}
+    Page Should Contain Element         ${successful_element}
+
+Trigger New Post 
+    Wait Until Element Is Enabled       ${button_new_post}
+    Click Link                          ${button_new_post}
+    Set Selenium Implicit Wait          ${wait}
+    Select Frame                        ${frame}
+    Wait Until Page Contains Element    ${editor_elements}
+    Press Keys                          ${add_title}    ${new_title}
+    Element Should Be Enabled           ${button_publish}
+    Click Button                        ${button_publish}
+    Wait Until Element Is Visible       ${publish_preverificat}
+    Click Button                        ${button_publish_verif}
+    Wait Until Element Is Visible       ${publish_verification}
